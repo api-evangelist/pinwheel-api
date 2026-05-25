@@ -1,0 +1,360 @@
+aid: pinwheel-api
+url: https://raw.githubusercontent.com/api-evangelist/pinwheel-api/refs/heads/main/apis.yml
+name: Pinwheel
+description: Pinwheel is an employment and income data platform that connects banks, fintechs, and lenders directly
+  to payroll systems. The API covers direct deposit switching (PreMatch, NativeLink), income and employment
+  verification, paystub and shift data, tax form retrieval (W-2, 1099), bill switch, and bill manager. Pinwheel
+  maintains direct integrations with 1,600+ payroll platforms covering an estimated 80% of U.S. workers and is the
+  first Consumer Reporting Agency (CRA) in the payroll-connectivity space.
+image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+tags:
+  - Employment
+  - Income
+  - Payroll
+  - Direct Deposit
+  - Identity
+  - Verification
+  - Financial
+  - Tax
+  - Bill Pay
+created: '2026-05-25'
+modified: '2026-05-25'
+specificationVersion: '0.16'
+kind: contract
+position: Consuming
+access: 3rd-Party
+apis:
+  - aid: pinwheel-api:pinwheel-deposit-switch-api
+    name: Pinwheel Deposit Switch API
+    tags:
+      - Direct Deposit
+      - Switch
+      - PreMatch
+      - NativeLink
+      - Payroll
+    baseURL: https://api.getpinwheel.com
+    humanURL: https://pinwheelapi.com/products/deposit-switch
+    properties:
+      - url: https://docs.pinwheelapi.com/public/docs/direct-deposit-switch
+        type: Documentation
+    description: The Pinwheel Deposit Switch API automates moving a customer's direct deposit allocations from one
+      financial institution to another by connecting directly to 17,000+ payroll providers. The product combines
+      PreMatch (credential-less I-9 matching covering ~40% of U.S. workers), NativeLink (device-saved credentials),
+      and Forms (pre-filled submission templates) routed by a Prime algorithm that picks the highest-converting path
+      per user. Banks, credit unions, and fintechs use it to win banking primacy through 2X conversion lifts, 65%
+      faster funding, and double-digit increases in average balance and lifetime value.
+  - aid: pinwheel-api:pinwheel-verify-api
+    name: Pinwheel Verify API
+    tags:
+      - Income
+      - Employment
+      - Identity
+      - Paystubs
+      - Shifts
+      - Verification
+      - Lending
+    baseURL: https://api.getpinwheel.com
+    humanURL: https://pinwheelapi.com/products/verify
+    properties:
+      - url: https://docs.pinwheelapi.com/public/docs/verify
+        type: Documentation
+    description: Pinwheel Verify is a payroll-connected income and employment verification API that returns identity,
+      employment status and dates, current and historical paystubs, shifts (for hourly workers), and tax forms pulled
+      directly from the source payroll system. Mortgage lenders, auto lenders, personal-loan and BNPL providers,
+      property managers, and gig platforms use Verify as a real-time, consent-based alternative to Work Number /
+      pay-stub uploads. Pinwheel operates as a Consumer Reporting Agency (CRA), making Verify reports usable for
+      FCRA-covered underwriting decisions.
+  - aid: pinwheel-api:pinwheel-taxes-api
+    name: Pinwheel Taxes API
+    tags:
+      - Tax
+      - W-2
+      - 1099
+      - Tax Forms
+      - Payroll
+    baseURL: https://api.getpinwheel.com
+    humanURL: https://pinwheelapi.com/products/taxes
+    properties:
+      - url: https://docs.pinwheelapi.com/public/docs/taxes
+        type: Documentation
+    description: The Pinwheel Taxes API retrieves W-2, 1099-K, 1099-MISC, and 1099-NEC documents directly from a
+      worker's payroll provider, returning them as both PDF and structured JSON. Tax-prep software, gig platforms,
+      and lenders use it to skip manual uploads, drive faster filing flows, power quarterly tax-estimation tools for
+      1099 earners, optimize W-4 withholding from historical data, and pull tax-form-based earnings totals into
+      income and employment verification decisions.
+  - aid: pinwheel-api:pinwheel-bill-switch-api
+    name: Pinwheel Bill Switch API
+    tags:
+      - Bill Pay
+      - Card Switching
+      - Merchant
+      - Recurring Payments
+    baseURL: https://api.getpinwheel.com
+    humanURL: https://pinwheelapi.com/products/bill-switch
+    properties:
+      - url: https://docs.pinwheelapi.com/public/docs/bill-switch
+        type: Documentation
+    description: The Pinwheel Bill Switch API updates a user's stored payment method across merchant and biller
+      accounts (streaming, telecom, utilities, insurance, subscriptions) so that a financial institution can move
+      recurring card-on-file payments to its own card. Issuers and challenger banks use Bill Switch alongside Deposit
+      Switch to capture recurring spend and become the primary payment instrument for the customer's everyday
+      obligations.
+  - aid: pinwheel-api:pinwheel-bill-manager-api
+    name: Pinwheel Bill Manager API
+    tags:
+      - Bill Pay
+      - Recurring Payments
+      - Bill Detection
+      - Subscriptions
+      - Cancellation
+    baseURL: https://api.getpinwheel.com
+    humanURL: https://pinwheelapi.com/products/bill-manager
+    properties:
+      - url: https://docs.pinwheelapi.com/public/docs/bill-manager
+        type: Documentation
+    description: Pinwheel Bill Manager detects, organizes, and acts on a customer's recurring bills and subscriptions.
+      It auto-identifies recurring charges with 80% greater accuracy than category-based detection, surfaces them in
+      a manageable list, and supports targeted actions including bill switch and bill cancellation. Banks, fintechs,
+      and personal-finance apps use it to give customers a single pane of glass for recurring obligations and to lift
+      engagement on bill-pay surfaces.
+  - aid: pinwheel-api:pinwheel-switch-kit-api
+    name: Pinwheel Switch Kit API
+    tags:
+      - Switch Kit
+      - Direct Deposit
+      - Bill Pay
+      - Onboarding
+      - Activation
+    baseURL: https://api.getpinwheel.com
+    humanURL: https://pinwheelapi.com/
+    properties:
+      - url: https://docs.pinwheelapi.com/public/docs/switch-kit
+        type: Documentation
+    description: Switch Kit bundles Pinwheel's Deposit Switch and Bill Switch products into a single onboarding
+      experience banks and fintechs can drop into account-opening and reactivation flows. It is the productized
+      answer to "make this account my primary account" — moving paycheck deposits in and recurring outflows over in
+      one consented session.
+  - aid: pinwheel-api:pinwheel-connected-accounts-api
+    name: Pinwheel Connected Accounts API
+    tags:
+      - Account Linking
+      - Employment Data
+      - Income Data
+      - External Accounts
+    baseURL: https://api.getpinwheel.com
+    humanURL: https://pinwheelapi.com/
+    properties:
+      - url: https://docs.pinwheelapi.com/public/docs/connected-accounts
+        type: Documentation
+    description: The Pinwheel Connected Accounts API gives applications ongoing, consented access to a user's payroll
+      and external-account data after the initial link. Builders use it to keep employment, income, and account
+      attributes fresh for credit decisioning, account servicing, and re-underwriting workflows without forcing the
+      end user to relink each time.
+  - aid: pinwheel-api:pinwheel-link-token-api
+    name: Pinwheel Link Token API
+    tags:
+      - Link
+      - Tokens
+      - Authentication
+      - Onboarding
+    baseURL: https://api.getpinwheel.com
+    humanURL: https://docs.pinwheelapi.com/public/reference/post_v1-link-tokens
+    properties:
+      - url: https://docs.pinwheelapi.com/public/docs/link
+        type: Documentation
+    description: The Pinwheel Link Token API mints short-lived link_tokens that initialize the Pinwheel Link drop-in
+      UI (Web, iOS, Android, React Native, Flutter, Capacitor). The token scopes the session to a specific end user,
+      a chosen job (direct deposit switch, paystubs, employment, identity, income, shifts, tax forms, bill switch,
+      bill cancellation), and the configured environment (sandbox or production).
+  - aid: pinwheel-api:pinwheel-accounts-api
+    name: Pinwheel Accounts API
+    tags:
+      - Accounts
+      - Payroll
+      - Employment
+      - Linked Accounts
+    baseURL: https://api.getpinwheel.com
+    humanURL: https://docs.pinwheelapi.com/public/reference/accounts
+    properties:
+      - url: https://docs.pinwheelapi.com/public/docs/accounts
+        type: Documentation
+    description: The Pinwheel Accounts API exposes the linked payroll accounts a user has connected through Pinwheel
+      Link, surfacing account-level metadata such as platform, status, employment relationship, and supported job
+      types so downstream services can decide what data to request next.
+  - aid: pinwheel-api:pinwheel-jobs-api
+    name: Pinwheel Jobs API
+    tags:
+      - Jobs
+      - Async
+      - Status
+      - Direct Deposit Switch
+      - Paystubs
+      - Employment
+      - Identity
+      - Income
+      - Shifts
+      - Tax Forms
+    baseURL: https://api.getpinwheel.com
+    humanURL: https://docs.pinwheelapi.com/public/reference/jobs
+    properties:
+      - url: https://docs.pinwheelapi.com/public/docs/jobs
+        type: Documentation
+    description: The Pinwheel Jobs API is the asynchronous execution surface for every Pinwheel job — direct_deposit_switch,
+      direct_deposit_allocations, paystubs, employment, identity, income, shifts, tax_forms, bill_switch, and
+      bill_cancellation. Clients create, monitor, and retrieve job state through this API, with results delivered
+      via webhook callbacks and on-demand polling.
+  - aid: pinwheel-api:pinwheel-platforms-api
+    name: Pinwheel Platforms API
+    tags:
+      - Platforms
+      - Payroll Providers
+      - Coverage
+      - Employers
+    baseURL: https://api.getpinwheel.com
+    humanURL: https://docs.pinwheelapi.com/public/reference/platforms
+    properties:
+      - url: https://docs.pinwheelapi.com/public/docs/platforms
+        type: Documentation
+    description: The Pinwheel Platforms API exposes the catalog of supported payroll providers and employer-side
+      platforms (ADP, Workday, Paychex, Paycom, Gusto, Rippling, plus 1,600+ others). Clients use it to check
+      coverage, surface platform-specific UX cues, and route users to the correct Link experience.
+  - aid: pinwheel-api:pinwheel-webhooks-api
+    name: Pinwheel Webhooks API
+    tags:
+      - Webhooks
+      - Events
+      - Signatures
+      - Payload Encryption
+    baseURL: https://api.getpinwheel.com
+    humanURL: https://docs.pinwheelapi.com/public/docs/webhooks
+    properties:
+      - url: https://docs.pinwheelapi.com/public/docs/webhooks
+        type: Documentation
+    description: The Pinwheel Webhooks API is how the platform delivers asynchronous events — job completions, link
+      events, account status changes, deposit switch outcomes, tax-form availability, and banking events — to client
+      systems. It supports HMAC signature verification and optional payload encryption for sensitive event types.
+common:
+  - type: Portal
+    url: https://pinwheelapi.com/
+  - type: Documentation
+    url: https://docs.pinwheelapi.com/
+  - type: APIReference
+    url: https://docs.pinwheelapi.com/public/reference
+  - type: GettingStarted
+    url: https://docs.pinwheelapi.com/public/docs/getting-started
+  - type: ChangeLog
+    url: https://docs.pinwheelapi.com/public/changelog
+  - type: StatusPage
+    url: https://www.pinwheelapistatus.com/
+  - type: SignUp
+    url: https://app.getpinwheel.com/signup
+  - type: Login
+    url: https://app.getpinwheel.com/login
+  - type: Sandbox
+    url: https://docs.pinwheelapi.com/public/docs/sandbox
+  - type: Authentication
+    url: https://docs.pinwheelapi.com/public/docs/authentication
+  - type: Webhooks
+    url: https://docs.pinwheelapi.com/public/docs/webhooks
+  - type: GitHubOrganization
+    url: https://github.com/underdog-tech
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/pinwheel-api/
+  - type: Blog
+    url: https://pinwheelapi.com/blog
+  - type: SDK
+    url: https://github.com/underdog-tech/pinwheel-ios-sdk
+    name: Pinwheel iOS SDK
+  - type: SDK
+    url: https://github.com/underdog-tech/pinwheel-android-sdk
+    name: Pinwheel Android SDK
+  - type: SDK
+    url: https://github.com/underdog-tech/react-native-pinwheel
+    name: Pinwheel React Native SDK
+  - type: SDK
+    url: https://github.com/underdog-tech/pinwheel-flutter-sdk
+    name: Pinwheel Flutter SDK
+  - type: SDK
+    url: https://github.com/underdog-tech/pinwheel-capacitor-sdk
+    name: Pinwheel Capacitor SDK
+  - type: Features
+    data:
+      - name: Direct Deposit Switch
+        description: Move a customer's direct deposit allocations to a new institution via PreMatch (credential-less I-9 match), NativeLink (device-saved credentials), or Forms; routed by the Prime algorithm for highest conversion.
+      - name: Income & Employment Verification (Verify)
+        description: Real-time payroll-connected verification returning identity, employment status, paystubs, shifts, and tax forms from the source payroll system.
+      - name: Tax Form Retrieval
+        description: Pull W-2, 1099-K, 1099-MISC, and 1099-NEC documents directly from payroll providers as PDF and structured JSON.
+      - name: Bill Switch
+        description: Update stored payment methods across merchant and biller accounts so issuers can capture recurring card-on-file spend.
+      - name: Bill Manager
+        description: Auto-detect, organize, and act on recurring bills and subscriptions with 80% greater accuracy than category-based detection.
+      - name: Switch Kit
+        description: Bundled Deposit Switch + Bill Switch onboarding flow productized for primary-banking activation.
+      - name: Connected Accounts
+        description: Ongoing consented access to payroll and external account data for re-underwriting, servicing, and credential refresh.
+      - name: Pinwheel Link
+        description: Drop-in UI for Web, iOS, Android, React Native, Flutter, and Capacitor that handles consent, MFA, and credential capture across 1,600+ payroll platforms.
+      - name: Consumer Reporting Agency (CRA) Status
+        description: First payroll-connectivity provider designated as a CRA, allowing Verify outputs to be used directly in FCRA-governed credit decisions.
+      - name: Coverage
+        description: 1,600+ supported payroll platforms reaching an estimated 80% of U.S. workers.
+      - name: Webhooks with Signing & Optional Payload Encryption
+        description: Asynchronous event delivery for job completions, link events, account status changes, and banking events with HMAC signatures and optional encryption.
+      - name: Sandbox Environment
+        description: Full-feature sandbox with synthetic users, employers, jobs, and webhook event simulation.
+      - name: Versioned API
+        description: Dated API versions selectable via header (v2022-03-02 through v2025-07-08+).
+    sources:
+      - https://pinwheelapi.com/
+      - https://docs.pinwheelapi.com/
+      - https://pinwheelapi.com/products/deposit-switch
+      - https://pinwheelapi.com/products/taxes
+    updated: '2026-05-25'
+  - type: UseCases
+    data:
+      - name: Banking Primacy
+        description: National banks, credit unions, and challenger banks use Deposit Switch + Bill Switch to make a newly-opened account the customer's primary financial relationship.
+      - name: Mortgage & Auto Lending
+        description: Lenders use Verify as a real-time alternative to Work Number for payroll-direct income and employment verification.
+      - name: Personal Loan / BNPL Underwriting
+        description: Consumer lenders use Verify and Connected Accounts to refresh income at underwriting and during re-pricing windows.
+      - name: Tax Preparation
+        description: Tax-prep software uses the Taxes API to skip manual W-2 / 1099 uploads and pull forms directly from payroll.
+      - name: Gig Worker Quarterly Tax Estimation
+        description: Gig platforms use prior-year 1099 retrieval to power quarterly self-employment tax estimates for their workers.
+      - name: Property Management & Rental Screening
+        description: Property managers use Verify to confirm tenant employment and income at application time.
+      - name: Subscription & Recurring Bill Management
+        description: Personal finance apps and challenger banks use Bill Manager to give users a single view of recurring obligations with one-click switch and cancel.
+  - type: Integrations
+    data:
+      - name: ADP
+        description: Direct payroll-provider integration for verification, paystubs, and deposit allocation.
+      - name: Workday
+        description: Direct payroll-provider integration covering enterprise employers.
+      - name: Paychex
+        description: SMB-focused payroll integration.
+      - name: Paycom
+        description: Mid-market payroll integration.
+      - name: Gusto
+        description: SMB cloud payroll integration covering startups and small employers.
+      - name: Rippling
+        description: HRIS + payroll integration.
+      - name: 1,600+ Additional Payroll Platforms
+        description: Long-tail coverage including local processors, government payroll, and industry-specific systems.
+  - type: Solutions
+    data:
+      - name: For Banks & Credit Unions
+        description: Primary banking activation via Switch Kit; deposit and recurring-payment capture to drive balance, engagement, and lifetime value.
+      - name: For Lenders
+        description: FCRA-grade payroll-connected income, employment, and tax-form verification for mortgage, auto, personal loan, and BNPL underwriting.
+      - name: For Fintechs & Challenger Banks
+        description: Drop-in Pinwheel Link plus Connected Accounts to power onboarding, direct deposit capture, and ongoing data refresh.
+      - name: For Tax & Payroll Software
+        description: Direct W-2/1099 retrieval and tax-platform webhooks for tax-prep flows and gig-worker tax tools.
+      - name: For Property Managers & Gig Platforms
+        description: Real-time employment and income verification at application time, plus shift data for hourly workers.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
