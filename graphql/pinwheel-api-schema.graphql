@@ -1,0 +1,790 @@
+"""
+Pinwheel API - GraphQL Schema
+Conceptual schema for the Pinwheel payroll connectivity and income verification platform.
+Covers: Link sessions, connected accounts, platforms/employers, direct deposit, employment,
+income, paystubs, tax forms, bill switch/manager, webhooks, and analytics.
+"""
+
+# ─────────────────────────────────────────────
+# Scalars
+# ─────────────────────────────────────────────
+
+scalar Date
+scalar DateTime
+scalar JSON
+scalar URL
+
+# ─────────────────────────────────────────────
+# Enums
+# ─────────────────────────────────────────────
+
+enum PlatformType {
+  PAYROLL
+  GIGS
+  MARKETPLACE
+  HR
+  GOVERNMENT
+  OTHER
+}
+
+enum AccountType {
+  CHECKING
+  SAVINGS
+  PREPAID
+  OTHER
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  GIG
+  SEASONAL
+  TEMPORARY
+  OTHER
+}
+
+enum EmploymentStatus {
+  EMPLOYED
+  UNEMPLOYED
+  TERMINATED
+  ON_LEAVE
+  RETIRED
+  UNKNOWN
+}
+
+enum CompensationType {
+  SALARY
+  HOURLY
+  COMMISSION
+  PIECE_RATE
+  OTHER
+}
+
+enum PayFrequency {
+  WEEKLY
+  BIWEEKLY
+  SEMIMONTHLY
+  MONTHLY
+  QUARTERLY
+  OTHER
+}
+
+enum EarningType {
+  REGULAR
+  OVERTIME
+  BONUS
+  COMMISSION
+  TIPS
+  PTO
+  SICK
+  HOLIDAY
+  OTHER
+}
+
+enum DeductionType {
+  HEALTH_INSURANCE
+  DENTAL
+  VISION
+  RETIREMENT_401K
+  RETIREMENT_403B
+  FSA
+  HSA
+  GARNISHMENT
+  UNION_DUES
+  LIFE_INSURANCE
+  OTHER
+}
+
+enum DocumentType {
+  W2
+  FORM_1099_K
+  FORM_1099_MISC
+  FORM_1099_NEC
+  PAYSTUB
+  OTHER
+}
+
+enum LinkStatus {
+  INITIALIZED
+  AUTHENTICATING
+  PENDING_MFA
+  CONNECTED
+  FAILED
+  EXPIRED
+  DISCONNECTED
+}
+
+enum AllocationTargetType {
+  FLAT_AMOUNT
+  PERCENTAGE
+  NET_PAY_REMAINDER
+}
+
+enum JobType {
+  DIRECT_DEPOSIT_SWITCH
+  DIRECT_DEPOSIT_ALLOCATIONS
+  PAYSTUBS
+  EMPLOYMENT
+  IDENTITY
+  INCOME
+  SHIFTS
+  TAX_FORMS
+  BILL_SWITCH
+  BILL_CANCELLATION
+}
+
+enum JobStatus {
+  PENDING
+  IN_PROGRESS
+  SUCCEEDED
+  FAILED
+  EXPIRED
+}
+
+enum WebhookEventType {
+  LINK_SUCCESS
+  LINK_ERROR
+  ACCOUNT_CONNECTED
+  ACCOUNT_DISCONNECTED
+  JOB_COMPLETED
+  JOB_FAILED
+  DIRECT_DEPOSIT_SWITCH_COMPLETED
+  TAX_FORM_AVAILABLE
+  PAYSTUB_AVAILABLE
+  EMPLOYMENT_STATUS_CHANGED
+  BANKING_EVENT
+}
+
+# ─────────────────────────────────────────────
+# Link & Session Types
+# ─────────────────────────────────────────────
+
+"""A short-lived token that initializes the Pinwheel Link drop-in UI."""
+type Token {
+  id: ID!
+  token: String!
+  expiresAt: DateTime!
+  endUser: EndUser
+  jobTypes: [JobType!]!
+  createdAt: DateTime!
+}
+
+"""A Pinwheel Link session representing a user's connection flow."""
+type Link {
+  id: ID!
+  status: LinkStatus!
+  endUser: EndUser
+  details: LinkDetails
+  accounts: [Account!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""Detailed metadata for a Link session."""
+type LinkDetails {
+  sessionId: ID!
+  linkToken: String!
+  platform: Platform
+  jobTypes: [JobType!]!
+  errorCode: String
+  errorMessage: String
+}
+
+# ─────────────────────────────────────────────
+# End User
+# ─────────────────────────────────────────────
+
+"""Represents the end user (worker/employee) whose data is being accessed."""
+type EndUser {
+  id: ID!
+  externalId: String
+  createdAt: DateTime!
+  accounts: [Account!]
+}
+
+# ─────────────────────────────────────────────
+# Platform & Employer Types
+# ─────────────────────────────────────────────
+
+"""A supported payroll or employer platform in Pinwheel's catalog."""
+type Platform {
+  id: ID!
+  name: String!
+  type: PlatformType!
+  logo: String
+  details: PlatformDetails
+  employers: [Employer!]
+  supportedJobs: [JobType!]!
+}
+
+"""Additional metadata about a payroll platform."""
+type PlatformDetails {
+  website: URL
+  supportsPreMatch: Boolean!
+  supportsNativeLink: Boolean!
+  marketCoverage: Float
+  workerCount: Int
+}
+
+"""An employer entity associated with one or more payroll platforms."""
+type Employer {
+  id: ID!
+  name: String!
+  details: EmployerDetails
+  logo: EmployerLogo
+  platforms: [Platform!]
+  workAddresses: [WorkAddress!]
+}
+
+"""Detailed employer information."""
+type EmployerDetails {
+  ein: String
+  industry: String
+  state: String
+  country: String
+}
+
+"""Logo asset for an employer."""
+type EmployerLogo {
+  url: URL!
+  width: Int
+  height: Int
+}
+
+"""A physical work location for an employer."""
+type WorkAddress {
+  street1: String
+  street2: String
+  city: String
+  state: String
+  postalCode: String
+  country: String
+}
+
+# ─────────────────────────────────────────────
+# Account Types
+# ─────────────────────────────────────────────
+
+"""A payroll account linked by an end user."""
+type Account {
+  id: ID!
+  endUser: EndUser!
+  platform: Platform!
+  status: LinkStatus!
+  employmentAccount: EmploymentAccount
+  payrollAccount: PayrollAccount
+  supportedJobs: [JobType!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""Employment-related data tied to a linked account."""
+type EmploymentAccount {
+  accountId: ID!
+  employer: Employer
+  employmentDetails: EmploymentDetails
+}
+
+"""Payroll-specific attributes for a linked account."""
+type PayrollAccount {
+  accountId: ID!
+  directDeposit: DirectDeposit
+  payHistory: PayHistory
+}
+
+# ─────────────────────────────────────────────
+# Employment & Income Types
+# ─────────────────────────────────────────────
+
+"""Employment status and terms for a worker."""
+type EmploymentDetails {
+  status: EmploymentStatus!
+  type: EmploymentType!
+  startDate: StartDate
+  terminationDate: Date
+  jobTitle: String
+  department: String
+  compensation: CompensationAmount
+  payFrequency: PayFrequency
+  supervisor: String
+}
+
+"""Structured representation of an employment start date."""
+type StartDate {
+  date: Date
+  estimated: Boolean!
+}
+
+"""Compensation for an employee."""
+type CompensationAmount {
+  type: CompensationType!
+  amount: Float
+  currency: String
+  period: PayPeriod
+}
+
+"""A pay period date range."""
+type PayPeriod {
+  startDate: Date!
+  endDate: Date!
+}
+
+# ─────────────────────────────────────────────
+# Direct Deposit & Allocation Types
+# ─────────────────────────────────────────────
+
+"""Direct deposit configuration for a payroll account."""
+type DirectDeposit {
+  accountId: ID!
+  allocations: [DirectDepositAllocation!]!
+  updatedAt: DateTime
+}
+
+"""A single direct deposit allocation split."""
+type DirectDepositAllocation {
+  id: ID!
+  destinationAccount: DestinationAccount!
+  target: AllocationTarget!
+  status: String
+}
+
+"""The target amount or percentage for a direct deposit allocation."""
+type AllocationTarget {
+  type: AllocationTargetType!
+  amount: AllocationAmount
+  percent: PercentSetting
+  netPay: NetPaySetting
+}
+
+"""A fixed dollar amount allocation setting."""
+type AllocationAmount {
+  value: Float!
+  currency: String!
+  amountSetting: AmountSetting
+}
+
+"""Configuration for a percentage-based direct deposit allocation."""
+type PercentSetting {
+  percentage: Float!
+}
+
+"""Net pay remainder allocation setting."""
+type NetPaySetting {
+  enabled: Boolean!
+}
+
+"""Configuration for a flat-amount allocation."""
+type AmountSetting {
+  amount: Float!
+  currency: String!
+}
+
+"""The bank account that receives a direct deposit allocation."""
+type DestinationAccount {
+  routingNumber: String!
+  accountNumber: String!
+  accountType: AccountType!
+  bankName: String
+  bankAccount: BankAccount
+}
+
+"""A bank account entity."""
+type BankAccount {
+  id: ID!
+  routingNumber: String!
+  accountNumber: String!
+  accountType: AccountType!
+  institutionName: String
+  nickname: String
+}
+
+# ─────────────────────────────────────────────
+# Paystub & Pay History Types
+# ─────────────────────────────────────────────
+
+"""A collection of historical paystub records."""
+type PayHistory {
+  accountId: ID!
+  paystubs: [Paycheck!]!
+  incomeMetric: IncomeMetric
+}
+
+"""A single paycheck record."""
+type Paycheck {
+  id: ID!
+  payPeriod: PayPeriod!
+  payDate: Date!
+  grossPay: Float!
+  netPay: NetPay!
+  currency: String!
+  details: PayStubDetails
+  employer: Employer
+}
+
+"""A paystub object with line-item breakdowns."""
+type PayStub {
+  id: ID!
+  accountId: ID!
+  payPeriod: PayPeriod!
+  payDate: Date!
+  grossPay: Float!
+  netPay: NetPay!
+  currency: String!
+  details: PayStubDetails
+}
+
+"""Detailed earnings, deductions, and taxes on a paystub."""
+type PayStubDetails {
+  earnings: [EarningRecord!]!
+  deductions: [DeductionRecord!]!
+  taxes: [TaxRecord!]!
+  ytdGross: Float
+  ytdNet: Float
+}
+
+"""An individual earning line on a paystub."""
+type EarningRecord {
+  type: EarningType!
+  description: String
+  hours: Float
+  rate: Float
+  amount: Float!
+  currency: String!
+  ytdAmount: Float
+}
+
+"""A deduction line on a paystub."""
+type DeductionRecord {
+  type: DeductionType!
+  description: String
+  amount: Float!
+  currency: String!
+  ytdAmount: Float
+}
+
+"""A tax withholding line on a paystub."""
+type TaxRecord {
+  description: String!
+  amount: Float!
+  currency: String!
+  ytdAmount: Float
+  jurisdiction: String
+}
+
+"""Net pay amount and components."""
+type NetPay {
+  amount: Float!
+  currency: String!
+}
+
+# ─────────────────────────────────────────────
+# Income Insights
+# ─────────────────────────────────────────────
+
+"""Aggregated income metric calculated from paystub history."""
+type IncomeMetric {
+  annualGross: Float
+  monthlyGross: Float
+  annualNet: Float
+  monthlyNet: Float
+  currency: String!
+  calculatedFrom: Int
+  periodStart: Date
+  periodEnd: Date
+}
+
+"""An insight derived from income data."""
+type IncomeInsight {
+  type: String!
+  label: String!
+  value: JSON
+  description: String
+}
+
+# ─────────────────────────────────────────────
+# Tax Documents
+# ─────────────────────────────────────────────
+
+"""A tax document retrieved from a payroll provider."""
+type TaxDocument {
+  id: ID!
+  accountId: ID!
+  type: DocumentType!
+  taxYear: Int!
+  employer: Employer
+  pdfUrl: URL
+  structuredData: JSON
+  retrievedAt: DateTime!
+}
+
+"""A W-2 tax form."""
+type W2 {
+  id: ID!
+  taxYear: Int!
+  employer: Employer!
+  employee: EndUser!
+  wagesAndTips: Float
+  federalTaxWithheld: Float
+  socialSecurityWages: Float
+  socialSecurityTaxWithheld: Float
+  medicareWages: Float
+  medicareTaxWithheld: Float
+  stateWages: Float
+  stateTaxWithheld: Float
+  state: String
+  pdfUrl: URL
+  structuredData: JSON
+}
+
+"""A 1099 tax form (K, MISC, or NEC)."""
+type Form1099 {
+  id: ID!
+  taxYear: Int!
+  type: DocumentType!
+  payer: Employer
+  recipient: EndUser!
+  nonemployeeCompensation: Float
+  otherIncome: Float
+  grossPayments: Float
+  federalTaxWithheld: Float
+  stateTaxWithheld: Float
+  state: String
+  pdfUrl: URL
+  structuredData: JSON
+}
+
+"""A generic document container."""
+type Document {
+  id: ID!
+  type: DocumentType!
+  name: String!
+  url: URL
+  mimeType: String
+  createdAt: DateTime!
+}
+
+# ─────────────────────────────────────────────
+# Identity Verification
+# ─────────────────────────────────────────────
+
+"""Identity verification data retrieved from payroll."""
+type EmployerIDVerification {
+  accountId: ID!
+  firstName: String
+  lastName: String
+  dateOfBirth: Date
+  ssn: String
+  address: WorkAddress
+  email: String
+  phone: String
+  employer: Employer
+  verifiedAt: DateTime
+}
+
+# ─────────────────────────────────────────────
+# Jobs (Async Operations)
+# ─────────────────────────────────────────────
+
+"""An asynchronous job created via the Pinwheel Jobs API."""
+type Job {
+  id: ID!
+  type: JobType!
+  status: JobStatus!
+  accountId: ID
+  endUser: EndUser
+  params: JSON
+  result: JSON
+  errorCode: String
+  errorMessage: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  completedAt: DateTime
+}
+
+# ─────────────────────────────────────────────
+# Webhooks
+# ─────────────────────────────────────────────
+
+"""A webhook endpoint registered to receive Pinwheel events."""
+type Webhook {
+  id: ID!
+  url: URL!
+  eventTypes: [WebhookEventType!]!
+  signingSecret: String
+  encryptionEnabled: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""A webhook event payload delivered by Pinwheel."""
+type WebhookEvent {
+  id: ID!
+  type: WebhookEventType!
+  accountId: ID
+  jobId: ID
+  endUserId: ID
+  payload: JSON!
+  deliveredAt: DateTime!
+  signature: String
+}
+
+# ─────────────────────────────────────────────
+# API Keys
+# ─────────────────────────────────────────────
+
+"""An API key credential for authenticating with Pinwheel."""
+type APIKey {
+  id: ID!
+  name: String
+  prefix: String!
+  environment: String!
+  createdAt: DateTime!
+  lastUsedAt: DateTime
+  expiresAt: DateTime
+}
+
+# ─────────────────────────────────────────────
+# Analytics & Insights
+# ─────────────────────────────────────────────
+
+"""An analytics insight generated by Pinwheel."""
+type AnalyticsInsight {
+  id: ID!
+  category: String!
+  label: String!
+  value: JSON
+  trend: String
+  period: PayPeriod
+  generatedAt: DateTime!
+}
+
+# ─────────────────────────────────────────────
+# Root Query
+# ─────────────────────────────────────────────
+
+type Query {
+  """Retrieve a Link session by ID."""
+  link(id: ID!): Link
+
+  """Retrieve a link token."""
+  token(id: ID!): Token
+
+  """List all accounts for an end user."""
+  accounts(endUserId: ID!): [Account!]!
+
+  """Retrieve a single account."""
+  account(id: ID!): Account
+
+  """List available platforms/payroll providers."""
+  platforms(type: PlatformType, limit: Int, offset: Int): [Platform!]!
+
+  """Retrieve a single platform."""
+  platform(id: ID!): Platform
+
+  """Search for employers."""
+  employers(name: String, platformId: ID): [Employer!]!
+
+  """Retrieve a single employer."""
+  employer(id: ID!): Employer
+
+  """Get employment details for an account."""
+  employmentDetails(accountId: ID!): EmploymentDetails
+
+  """Get direct deposit configuration for an account."""
+  directDeposit(accountId: ID!): DirectDeposit
+
+  """List paystubs for an account."""
+  paystubs(accountId: ID!, limit: Int, offset: Int): [Paycheck!]!
+
+  """Retrieve a single paystub."""
+  paystub(id: ID!): PayStub
+
+  """Get income metrics for an account."""
+  incomeMetric(accountId: ID!): IncomeMetric
+
+  """Get income insights for an account."""
+  incomeInsights(accountId: ID!): [IncomeInsight!]!
+
+  """List tax documents for an account."""
+  taxDocuments(accountId: ID!, taxYear: Int, type: DocumentType): [TaxDocument!]!
+
+  """Retrieve a W-2 document."""
+  w2(id: ID!): W2
+
+  """Retrieve a 1099 document."""
+  form1099(id: ID!): Form1099
+
+  """Retrieve identity verification data for an account."""
+  identityVerification(accountId: ID!): EmployerIDVerification
+
+  """Retrieve a Job by ID."""
+  job(id: ID!): Job
+
+  """List Jobs for an end user."""
+  jobs(endUserId: ID!, type: JobType, status: JobStatus): [Job!]!
+
+  """List registered webhooks."""
+  webhooks: [Webhook!]!
+
+  """Retrieve a single webhook."""
+  webhook(id: ID!): Webhook
+
+  """Retrieve webhook events."""
+  webhookEvents(type: WebhookEventType, limit: Int, offset: Int): [WebhookEvent!]!
+
+  """List API keys."""
+  apiKeys: [APIKey!]!
+
+  """Retrieve analytics insights."""
+  analyticsInsights(category: String): [AnalyticsInsight!]!
+
+  """List end users."""
+  endUsers(limit: Int, offset: Int): [EndUser!]!
+
+  """Retrieve a single end user."""
+  endUser(id: ID!): EndUser
+}
+
+# ─────────────────────────────────────────────
+# Root Mutation
+# ─────────────────────────────────────────────
+
+type Mutation {
+  """Create a link token to initialize a Pinwheel Link session."""
+  createLinkToken(endUserId: ID!, jobTypes: [JobType!]!): Token!
+
+  """Update direct deposit allocations for an account."""
+  updateDirectDeposit(accountId: ID!, allocations: [DirectDepositAllocationInput!]!): DirectDeposit!
+
+  """Create (initiate) an async job."""
+  createJob(accountId: ID!, type: JobType!, params: JSON): Job!
+
+  """Register a new webhook endpoint."""
+  createWebhook(url: URL!, eventTypes: [WebhookEventType!]!, enableEncryption: Boolean): Webhook!
+
+  """Delete a webhook endpoint."""
+  deleteWebhook(id: ID!): Boolean!
+
+  """Disconnect a linked account."""
+  disconnectAccount(id: ID!): Account!
+
+  """Create a new API key."""
+  createAPIKey(name: String!): APIKey!
+
+  """Revoke an API key."""
+  revokeAPIKey(id: ID!): Boolean!
+}
+
+# ─────────────────────────────────────────────
+# Input Types
+# ─────────────────────────────────────────────
+
+input DirectDepositAllocationInput {
+  routingNumber: String!
+  accountNumber: String!
+  accountType: AccountType!
+  allocationTargetType: AllocationTargetType!
+  amount: Float
+  percentage: Float
+}
