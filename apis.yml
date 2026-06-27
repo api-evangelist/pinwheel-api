@@ -265,7 +265,7 @@ common:
   url: https://docs.pinwheelapi.com/public/changelog
 - type: StatusPage
   url: https://www.pinwheelapistatus.com/
-- type: SignUp
+- type: Signup
   url: https://app.getpinwheel.com/signup
 - type: Login
   url: https://app.getpinwheel.com/login
@@ -281,19 +281,19 @@ common:
   url: https://www.linkedin.com/company/pinwheel-api/
 - type: Blog
   url: https://pinwheelapi.com/blog
-- type: SDK
+- type: SDKs
   url: https://github.com/underdog-tech/pinwheel-ios-sdk
   name: Pinwheel iOS SDK
-- type: SDK
+- type: SDKs
   url: https://github.com/underdog-tech/pinwheel-android-sdk
   name: Pinwheel Android SDK
-- type: SDK
+- type: SDKs
   url: https://github.com/underdog-tech/react-native-pinwheel
   name: Pinwheel React Native SDK
-- type: SDK
+- type: SDKs
   url: https://github.com/underdog-tech/pinwheel-flutter-sdk
   name: Pinwheel Flutter SDK
-- type: SDK
+- type: SDKs
   url: https://github.com/underdog-tech/pinwheel-capacitor-sdk
   name: Pinwheel Capacitor SDK
 - type: Features
