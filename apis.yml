@@ -126,6 +126,12 @@ apis:
   - Bill Pay
   - Recurring Payments
   - Bill Detection
+  - Subscription
+  - Cancellation
+  tags_raw:
+  - Bill Pay
+  - Recurring Payments
+  - Bill Detection
   - Subscriptions
   - Cancellation
   baseURL: https://api.getpinwheel.com
@@ -194,6 +200,11 @@ apis:
 - aid: pinwheel-api:pinwheel-accounts-api
   name: Pinwheel Accounts API
   tags:
+  - Account
+  - Payroll
+  - Employment
+  - Linked Accounts
+  tags_raw:
   - Accounts
   - Payroll
   - Employment
@@ -210,6 +221,17 @@ apis:
 - aid: pinwheel-api:pinwheel-jobs-api
   name: Pinwheel Jobs API
   tags:
+  - Job
+  - Async
+  - Status
+  - Direct Deposit Switch
+  - Paystubs
+  - Employment
+  - Identity
+  - Income
+  - Shifts
+  - Tax Forms
+  tags_raw:
   - Jobs
   - Async
   - Status
@@ -249,6 +271,11 @@ apis:
 - aid: pinwheel-api:pinwheel-webhooks-api
   name: Pinwheel Webhooks API
   tags:
+  - Webhook
+  - Event
+  - Signatures
+  - Payload Encryption
+  tags_raw:
   - Webhooks
   - Events
   - Signatures
