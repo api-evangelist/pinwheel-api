@@ -8,6 +8,17 @@ description: Pinwheel is an employment and income data platform that connects ba
   maintains direct integrations with 1,600+ payroll platforms covering an estimated
   80% of U.S. workers and is the first Consumer Reporting Agency (CRA) in the payroll-connectivity
   space.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: unknown
