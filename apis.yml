@@ -302,6 +302,8 @@ apis:
     HMAC signature verification and optional payload encryption for sensitive event
     types.
 common:
+- type: Website
+  url: https://www.pinwheelapi.com/
 - type: TrustCenter
   url: security/pinwheel-api-trust-center.yml
 - type: DomainSecurity
